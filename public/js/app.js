@@ -19391,27 +19391,66 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       hovered: false,
-      albums: {}
+      albums: {},
+      dates: {},
+      searchQuery: '',
+      dateQuery: ''
     };
   },
   mounted: function mounted() {
     this.getAlbums();
   },
   methods: {
-    getAlbums: function getAlbums() {
-      var _this = this;
-      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-      axios__WEBPACK_IMPORTED_MODULE_0___default().get("http://localhost:8000/api/albums?page=".concat(page)).then(function (res) {
-        _this.albums = res.data.albums;
-      })["catch"](function (e) {
-        return console.log(e);
-      });
-    },
+    // getAlbums(page = 1){
+    //   axios.get(`http://localhost:8000/api/albums?page=${page}`)
+    //   .then(res => {
+    //     this.albums = res.data.albums
+    //   })
+    //   .catch(e => console.log(e))
+    // },
     mouseEnter: function mouseEnter(e) {
       e.target.children[0].classList.add('hovered');
     },
     mouseLeave: function mouseLeave(e) {
       e.target.children[0].classList.remove('hovered');
+    },
+    // getSearch(e, page = 1){
+    //   this.searchQuery = e.target.value
+    //   if(e.target.value === ''){
+    //     this.getAlbums()
+    //   }else{
+    //     axios.get(`http://localhost:8000/api/albums/search/${e.target.value}?page=${page}`)
+    //     .then(res => {
+    //       this.albums = res.data
+    //       // console.log(res.data)
+    //     })
+    //     .catch(e => console.log(e))
+    //   }
+    // },
+    getDate: function getDate(e) {
+      this.dateQuery = e.target.value;
+      this.getAlbums();
+    },
+    getSearch: function getSearch(e) {
+      this.searchQuery = e.target.value;
+      this.getAlbums();
+    },
+    getAlbums: function getAlbums() {
+      var _this = this;
+      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+      console.log(this.dateQuery);
+      axios__WEBPACK_IMPORTED_MODULE_0___default().get("http://localhost:8000/api/albums?page=".concat(page), {
+        params: {
+          query: this.searchQuery,
+          date: this.dateQuery
+        }
+      }).then(function (res) {
+        _this.albums = res.data.albums;
+        _this.dates = res.data.dates;
+        console.log(res.data);
+      })["catch"](function (e) {
+        return console.log(e);
+      });
     }
   }
 });
@@ -19789,30 +19828,48 @@ var _hoisted_3 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", null, "Albums", -1 /* HOISTED */);
 });
 var _hoisted_4 = /*#__PURE__*/_withScopeId(function () {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("option", {
+    value: ""
+  }, "-- date --", -1 /* HOISTED */);
+});
+var _hoisted_5 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("hr", null, null, -1 /* HOISTED */);
 });
-var _hoisted_5 = {
+var _hoisted_6 = {
   "class": "cards row"
 };
-var _hoisted_6 = ["src"];
-var _hoisted_7 = /*#__PURE__*/_withScopeId(function () {
+var _hoisted_7 = ["src"];
+var _hoisted_8 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "card-img-overlay border d-flex align-items-center justify-content-center mt-0"
   }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", null, "see details")], -1 /* HOISTED */);
 });
-var _hoisted_8 = {
+var _hoisted_9 = {
   "class": "card-body"
 };
-var _hoisted_9 = {
+var _hoisted_10 = {
   "class": "card-title"
 };
-var _hoisted_10 = {
-  "class": "mt-5"
+var _hoisted_11 = {
+  "class": "mt-3"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_router_link = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("router-link");
   var _component_Bootstrap5Pagination = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("Bootstrap5Pagination");
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [_hoisted_3, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_router_link, {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [_hoisted_3, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    type: "text",
+    onKeyup: _cache[0] || (_cache[0] = function () {
+      return $options.getSearch && $options.getSearch.apply($options, arguments);
+    })
+  }, null, 32 /* HYDRATE_EVENTS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
+    onChange: _cache[1] || (_cache[1] = function () {
+      return $options.getDate && $options.getDate.apply($options, arguments);
+    })
+  }, [_hoisted_4, ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.dates, function (date) {
+    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("option", {
+      key: date.date_release
+    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(new Date(date.date_release).getFullYear()), 1 /* TEXT */);
+  }), 128 /* KEYED_FRAGMENT */))], 32 /* HYDRATE_EVENTS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_router_link, {
     "class": "btn btn-primary",
     to: {
       name: 'Create'
@@ -19822,7 +19879,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Add new Album")];
     }),
     _: 1 /* STABLE */
-  })]), _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.albums.data, function (album) {
+  })]), _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.albums.data, function (album) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
       "class": "col-4 mb-3",
       key: album.id
@@ -19831,10 +19888,10 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       style: {
         "width": "18rem"
       },
-      onMouseenter: _cache[0] || (_cache[0] = function () {
+      onMouseenter: _cache[2] || (_cache[2] = function () {
         return $options.mouseEnter && $options.mouseEnter.apply($options, arguments);
       }),
-      onMouseleave: _cache[1] || (_cache[1] = function () {
+      onMouseleave: _cache[3] || (_cache[3] = function () {
         return $options.mouseLeave && $options.mouseLeave.apply($options, arguments);
       })
     }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
@@ -19854,11 +19911,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           src: album.cover,
           "class": "card-img-top",
           alt: "..."
-        }, null, 8 /* PROPS */, _hoisted_6), _hoisted_7];
+        }, null, 8 /* PROPS */, _hoisted_7), _hoisted_8];
       }),
       _: 2 /* DYNAMIC */
-    }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["to"])], 2 /* CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_8, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h5", _hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(album.title), 1 /* TEXT */)])], 32 /* HYDRATE_EVENTS */)]);
-  }), 128 /* KEYED_FRAGMENT */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Bootstrap5Pagination, {
+    }, 1032 /* PROPS, DYNAMIC_SLOTS */, ["to"])], 2 /* CLASS */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_9, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h5", _hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(album.title), 1 /* TEXT */)])], 32 /* HYDRATE_EVENTS */)]);
+  }), 128 /* KEYED_FRAGMENT */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_Bootstrap5Pagination, {
     data: $data.albums,
     onPaginationChangePage: $options.getAlbums,
     align: "center",
@@ -19885,7 +19942,7 @@ var _hoisted_1 = {
   "class": "container"
 };
 var _hoisted_2 = {
-  "class": "mt-5"
+  "class": "d-flex justify-content-between mt-5"
 };
 var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("hr", null, null, -1 /* HOISTED */);
 var _hoisted_4 = {
@@ -19907,7 +19964,7 @@ var _hoisted_10 = {
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_router_link = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("router-link");
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", _hoisted_2, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.album.title) + " - " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.album.artist), 1 /* TEXT */), _hoisted_3, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.album.title) + " - " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.album.artist), 1 /* TEXT */), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h3", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(new Date($data.album.date_release).getFullYear()), 1 /* TEXT */)]), _hoisted_3, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
     src: $data.album.cover,
     alt: "",
     "class": "col-10"

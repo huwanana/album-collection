@@ -1,6 +1,9 @@
 <template>
   <div class="container">
-    <h3 class="mt-5">{{ album.title }} - {{ album.artist }}</h3>
+    <div class="d-flex justify-content-between mt-5">
+        <h3>{{ album.title }} - {{ album.artist }}</h3>
+        <h3>{{ new Date(album.date_release).getFullYear() }}</h3>
+    </div>
     <hr>
     <div class="row">
       <div class="col-6 text-center">

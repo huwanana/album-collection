@@ -20,3 +20,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::resource('/albums', AlbumController::class)->only(['index', 'show', 'store', 'destroy']);
 Route::post('/albums/{id}', [AlbumController::class, 'update']);
+Route::get('/albums/search/{query}', [AlbumController::class, 'search']);

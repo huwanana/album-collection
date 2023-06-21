@@ -6,14 +6,27 @@ use App\Models\Album;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class AlbumController extends Controller
 {
-	public function index(){
-		return response()->json([
-			'status' => 200,
-			'albums' => Album::paginate(3)
-		], 200);
+	public function index(Request $request){
+		if($request->input('date') == ''){
+			return response()->json([
+				'dates' => Album::select('date_release')->distinct()->get(),
+				'albums' => Album::where('title', 'like', '%'.$request->input('query').'%')
+													->orWhere('artist', 'like', '%'.$request->input('query').'%')
+													->paginate(3)
+			]);
+		}else{
+			return response()->json([
+				'dates' => Album::select('date_release')->distinct()->get(),
+				'albums' => Album::whereYear('date_release', Carbon::parse($request->input('date')))
+												->orWhere('title', 'like', '%'.$request->input('query').'%')
+												->orWhere('artist', 'like', '%'.$request->input('query').'%')
+												->paginate(3)
+			]);
+		}
 	}
 
   public function store(Request $request)
@@ -110,4 +123,10 @@ class AlbumController extends Controller
     $album->delete();
 		return response()->json('Successfully deleted!');
   }
+
+	public function search($query){
+		return Album::where('title', 'like', '%'.$query.'%')
+									->orWhere('artist', 'like', '%'.$query.'%')
+									->paginate(3);
+	}
 }

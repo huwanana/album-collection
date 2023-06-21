@@ -2,6 +2,11 @@
   <div class="container">
     <div class="d-flex justify-content-between mt-5">
       <h3>Albums</h3>
+      <input type="text" v-on:keyup="getSearch">
+      <select v-on:change="getDate">
+        <option value="">-- date --</option>
+        <option v-for="date in dates" :key="date.date_release">{{ new Date(date.date_release).getFullYear() }}</option>
+      </select>
       <router-link class="btn btn-primary" :to="{ name: 'Create' }">Add new Album</router-link>
     </div>
     <hr>
@@ -23,7 +28,7 @@
         </div>
       </div>
     </div>
-    <div class="mt-5">
+    <div class="mt-3">
       <Bootstrap5Pagination
         :data="albums"
         @pagination-change-page="getAlbums"
@@ -46,26 +51,65 @@ export default {
   data(){
     return{
       hovered: false,
-      albums: {}
+      albums: {},
+      dates: {},
+      searchQuery: '',
+      dateQuery: ''
     }
   },
   mounted(){
     this.getAlbums()
   },
   methods:{
-    getAlbums(page = 1){
-      axios.get(`http://localhost:8000/api/albums?page=${page}`)
-      .then(res => {
-        this.albums = res.data.albums
-      })
-      .catch(e => console.log(e))
-    },
+    // getAlbums(page = 1){
+    //   axios.get(`http://localhost:8000/api/albums?page=${page}`)
+    //   .then(res => {
+    //     this.albums = res.data.albums
+    //   })
+    //   .catch(e => console.log(e))
+    // },
     mouseEnter(e){
       e.target.children[0].classList.add('hovered')
     },
     mouseLeave(e){
       e.target.children[0].classList.remove('hovered')
-    }
+    },
+    // getSearch(e, page = 1){
+    //   this.searchQuery = e.target.value
+    //   if(e.target.value === ''){
+    //     this.getAlbums()
+    //   }else{
+    //     axios.get(`http://localhost:8000/api/albums/search/${e.target.value}?page=${page}`)
+    //     .then(res => {
+    //       this.albums = res.data
+    //       // console.log(res.data)
+    //     })
+    //     .catch(e => console.log(e))
+    //   }
+    // },
+    getDate(e){
+      this.dateQuery = e.target.value
+      this.getAlbums()
+    },
+    getSearch(e){
+      this.searchQuery = e.target.value
+      this.getAlbums()
+    },
+    getAlbums(page=1){
+      console.log(this.dateQuery)
+      axios.get(`http://localhost:8000/api/albums?page=${page}`, {
+        params: {
+          query: this.searchQuery,
+          date: this.dateQuery
+        }
+      })
+      .then(res => {
+        this.albums = res.data.albums
+        this.dates = res.data.dates
+        console.log(res.data)
+      })
+      .catch(e => console.log(e))
+    },
   },
     
 }
